@@ -1,6 +1,0 @@
-<%= turbo_stream.remove "lesson_comment_#{@comment_id}" %>
-<%= turbo_stream.update "lesson_comments_count", @lesson.lesson_comments.count.to_s %>
-
-<% if @lesson.lesson_comments.none? %>
-  <%= turbo_stream.append "lesson_comments_list", partial: "lesson_comments/chat_empty_state" %>
-<% end %>
