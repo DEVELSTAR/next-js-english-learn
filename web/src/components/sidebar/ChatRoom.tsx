@@ -35,37 +35,47 @@ export default function ChatRoom({
       return
     }
 
-    const channel = supabase
-      .channel(`lesson_comments:${lessonId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "lesson_comments",
-          filter: `lesson_id=eq.${lessonId}`,
-        },
-        async (payload) => {
-          const newComment = payload.new as LessonComment
-          // Fetch the author's profile name
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("id, name, email, role")
-            .eq("id", newComment.user_id)
-            .single()
+    try {
+      const channel = supabase
+        .channel(`lesson_comments:${lessonId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "lesson_comments",
+            filter: `lesson_id=eq.${lessonId}`,
+          },
+          async (payload: any) => {
+            try {
+              const newComment = payload.new as LessonComment
+              // Fetch the author's profile name
+              const { data: profile } = await supabase
+                .from("profiles")
+                .select("id, name, email, role")
+                .eq("id", newComment.user_id)
+                .single()
 
-          setComments((prev) => {
-            if (prev.some((c) => c.id === newComment.id)) return prev
-            return [...prev, { ...newComment, user: profile }]
-          })
-        }
-      )
-      .subscribe()
+              setComments((prev) => {
+                if (prev.some((c) => c.id === newComment.id)) return prev
+                return [...prev, { ...newComment, user: profile }]
+              })
+            } catch (err) {
+              console.error("Error in realtime comment update:", err)
+            }
+          }
+        )
+        .subscribe()
 
-    return () => {
-      supabase.removeChannel(channel)
+      return () => {
+        try {
+          supabase.removeChannel(channel)
+        } catch {}
+      }
+    } catch (err) {
+      console.error("Failed to setup realtime comments subscription:", err)
     }
-  }, [lessonId, supabase])
+  }, [lessonId])
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()

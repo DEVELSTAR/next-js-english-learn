@@ -1,7 +1,16 @@
 import Link from "next/link"
+import { headers } from "next/headers"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
 export default async function Navbar() {
+  const headerList = await headers()
+  const pathname = headerList.get("x-pathname") || ""
+
+  // Dedicated admin portal has its own navigation; hide public navbar
+  if (pathname.startsWith("/admin")) {
+    return null
+  }
+
   let user = null
   let profile = null
 

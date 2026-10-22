@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { cookies } from "next/headers"
 import { isSupabaseConfigured, normalizeSupabaseUrl } from "./config"
 
@@ -49,8 +50,8 @@ export async function createClient() {
   })
 }
 
-// Admin / Service Role client (bypasses RLS for super-admin or system tasks)
-export function createAdminClient() {
+// Raw Supabase Admin client with Auth Admin API (create/delete users)
+export function getAdminClient() {
   const supabaseUrl = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL) || "https://placeholder.supabase.co"
   const serviceRoleKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -58,15 +59,13 @@ export function createAdminClient() {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
     "placeholder-key"
 
-  return createServerClient(supabaseUrl, serviceRoleKey, {
-    cookies: {
-      getAll: () => [],
-      setAll: () => {},
-    },
-    global: {
-      fetch: resilientFetch,
+  return createSupabaseClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
   })
 }
+
 
 

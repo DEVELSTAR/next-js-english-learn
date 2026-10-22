@@ -2,6 +2,7 @@ import Link from "next/link"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { MOCK_LESSONS } from "@/lib/mock-data"
 import { Plus, BookOpen, Sparkles, Users, FileText } from "lucide-react"
+import DeleteLessonButton from "@/components/admin/DeleteLessonButton"
 
 export const dynamic = "force-dynamic"
 
@@ -155,13 +156,16 @@ export default async function AdminDashboardPage() {
                         {l.status}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-right space-x-2">
-                      <Link
-                        href={`/admin/lessons/${l.id}/edit`}
-                        className="text-stone-700 hover:text-stone-900 font-semibold underline"
-                      >
-                        Edit
-                      </Link>
+                    <td className="py-3 px-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          href={`/admin/lessons/${l.id}/edit`}
+                          className="px-2.5 py-1 text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition"
+                        >
+                          Edit
+                        </Link>
+                        <DeleteLessonButton lessonId={l.id} lessonTitle={l.title} />
+                      </div>
                     </td>
                   </tr>
                 ))

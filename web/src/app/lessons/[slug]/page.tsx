@@ -228,7 +228,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
         {/* Section 2: Interactive Tools (Right on laptop, Bottom on mobile) */}
         {!isAdmin && (
-          <div className="lg:col-span-5 lg:row-span-2 lg:sticky lg:top-20 order-2 w-full">
+          <div className="lg:col-span-5 lg:row-span-2 lg:sticky lg:top-20 order-2 w-full relative z-20">
             <LessonSidebar
               lesson={lesson}
               currentUser={profile}

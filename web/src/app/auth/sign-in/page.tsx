@@ -22,7 +22,7 @@ function SignInForm() {
     setError(null)
 
     const supabase = createClient()
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
@@ -30,10 +30,25 @@ function SignInForm() {
     if (signInError) {
       setError(signInError.message)
       setIsLoading(false)
-    } else {
-      router.push(redirectTo)
-      router.refresh()
+      return
     }
+
+    if (authData?.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single()
+
+      if (profile && ["admin", "super_admin"].includes(profile.role)) {
+        router.push("/admin")
+        router.refresh()
+        return
+      }
+    }
+
+    router.push(redirectTo)
+    router.refresh()
   }
 
   return (

@@ -88,6 +88,32 @@ export default function LessonForm({
     }
   }
 
+  const handleDelete = async () => {
+    if (!initialLesson.id || !confirm(`Are you sure you want to delete "${title}"?`)) {
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const res = await fetch(`/api/admin/lessons/${initialLesson.id}`, {
+        method: "DELETE",
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Failed to delete lesson")
+      }
+
+      router.push("/admin")
+      router.refresh()
+    } catch (err: any) {
+      setError(err?.message || "Failed to delete lesson")
+      setIsLoading(false)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200 shadow-sm space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center justify-between border-b border-stone-100 pb-4">
@@ -202,6 +228,16 @@ export default function LessonForm({
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-stone-100">
+        {isEditing && initialLesson.id && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={isLoading}
+            className="mr-auto px-4 py-2 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition cursor-pointer disabled:opacity-40"
+          >
+            Delete Lesson
+          </button>
+        )}
         <button
           type="button"
           onClick={() => router.back()}

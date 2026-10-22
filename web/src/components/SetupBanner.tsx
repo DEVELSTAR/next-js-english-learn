@@ -1,8 +1,12 @@
+import { headers } from "next/headers"
 import { isSupabaseConfigured } from "@/lib/supabase/config"
 import { Database, AlertTriangle } from "lucide-react"
 
-export default function SetupBanner() {
-  if (isSupabaseConfigured()) {
+export default async function SetupBanner() {
+  const headerList = await headers()
+  const pathname = headerList.get("x-pathname") || ""
+
+  if (pathname.startsWith("/admin") || isSupabaseConfigured()) {
     return null
   }
 

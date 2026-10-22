@@ -29,27 +29,38 @@ export default function LessonSidebar({
   const [notesCount, setNotesCount] = useState(initialNotes.length)
 
   useEffect(() => {
-    const savedTab = localStorage.getItem("lesson_sidebar_tab") as TabType | null
-    if (savedTab && ["ai_tutor", "chatroom", "notes"].includes(savedTab)) {
-      setActiveTab(savedTab)
+    try {
+      const savedTab = localStorage.getItem("lesson_sidebar_tab") as TabType | null
+      if (savedTab && ["ai_tutor", "chatroom", "notes"].includes(savedTab)) {
+        setActiveTab(savedTab)
+      }
+    } catch {
+      // Safe fallback
     }
   }, [])
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab)
-    localStorage.setItem("lesson_sidebar_tab", tab)
+    try {
+      localStorage.setItem("lesson_sidebar_tab", tab)
+    } catch {
+      // Safe fallback
+    }
   }
 
   return (
     <aside className="w-full rounded-2xl border border-emerald-900/15 bg-white/95 backdrop-blur-xs shadow-sm overflow-hidden flex flex-col h-full lg:max-h-[calc(100vh-6.5rem)]">
       {/* Tab Navigation Header - ALWAYS OPEN, NEVER MINIMIZED */}
-      <div className="p-2 sm:p-2.5 bg-stone-50/90 border-b border-stone-200/80 shrink-0">
+      <div className="relative z-30 p-2 sm:p-2.5 bg-stone-50/90 border-b border-stone-200/80 shrink-0">
         <div className="grid grid-cols-3 gap-1.5 w-full">
           {/* Tab 1: AI Tutor */}
           <button
             type="button"
-            onClick={() => handleTabChange("ai_tutor")}
-            className={`px-2 sm:px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer select-none ${
+            onClick={(e) => {
+              e.stopPropagation()
+              handleTabChange("ai_tutor")
+            }}
+            className={`touch-manipulation px-2 sm:px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
               activeTab === "ai_tutor"
                 ? "bg-emerald-800 text-white shadow-xs"
                 : "bg-white text-stone-700 border border-stone-200/90 hover:border-emerald-600/40 hover:bg-stone-50"
@@ -62,8 +73,11 @@ export default function LessonSidebar({
           {/* Tab 2: Discussion */}
           <button
             type="button"
-            onClick={() => handleTabChange("chatroom")}
-            className={`px-2 sm:px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer select-none ${
+            onClick={(e) => {
+              e.stopPropagation()
+              handleTabChange("chatroom")
+            }}
+            className={`touch-manipulation px-2 sm:px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
               activeTab === "chatroom"
                 ? "bg-emerald-800 text-white shadow-xs"
                 : "bg-white text-stone-700 border border-stone-200/90 hover:border-blue-600/40 hover:bg-stone-50"
@@ -87,8 +101,11 @@ export default function LessonSidebar({
           {/* Tab 3: Notes */}
           <button
             type="button"
-            onClick={() => handleTabChange("notes")}
-            className={`px-2 sm:px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer select-none ${
+            onClick={(e) => {
+              e.stopPropagation()
+              handleTabChange("notes")
+            }}
+            className={`touch-manipulation px-2 sm:px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer ${
               activeTab === "notes"
                 ? "bg-emerald-800 text-white shadow-xs"
                 : "bg-white text-stone-700 border border-stone-200/90 hover:border-amber-600/40 hover:bg-stone-50"
@@ -111,34 +128,34 @@ export default function LessonSidebar({
         </div>
       </div>
 
-      {/* Active Tool Panel - ALWAYS OPEN */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 scrollbar-thin">
-        {activeTab === "ai_tutor" && (
+      {/* Active Tool Panels - Pre-mounted, toggled with display for instant switching & state preservation */}
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 scrollbar-thin relative z-10">
+        <div className={activeTab === "ai_tutor" ? "block" : "hidden"}>
           <AiTutor
             lessonId={lesson.id}
             lessonTitle={lesson.title}
             initialMessages={initialAiMessages}
             isAuthenticated={!!currentUser}
           />
-        )}
+        </div>
 
-        {activeTab === "chatroom" && (
+        <div className={activeTab === "chatroom" ? "block" : "hidden"}>
           <ChatRoom
             lessonId={lesson.id}
             isTopic={lesson.lesson_type === "foundational_topic"}
             initialComments={initialComments}
             currentUserId={currentUser?.id}
           />
-        )}
+        </div>
 
-        {activeTab === "notes" && (
+        <div className={activeTab === "notes" ? "block" : "hidden"}>
           <LessonNotes
             lessonId={lesson.id}
             isTopic={lesson.lesson_type === "foundational_topic"}
             initialNotes={initialNotes}
             currentUserId={currentUser?.id}
           />
-        )}
+        </div>
       </div>
     </aside>
   )
