@@ -156,7 +156,7 @@ export default function ChatRoom({
       </div>
 
       {/* Messages */}
-      <div className="h-[360px] sm:h-[390px] overflow-y-auto p-4 bg-stone-50/30 space-y-3">
+      <div className="h-[360px] sm:h-[390px] lg:h-[calc(100vh-17rem)] overflow-y-auto p-4 bg-stone-50/30 space-y-3">
         {comments.length === 0 ? (
           <div className="py-12 text-center text-xs text-stone-400">
             No messages yet. Be the first to start the discussion!

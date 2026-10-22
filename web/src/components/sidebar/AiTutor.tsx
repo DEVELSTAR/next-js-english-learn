@@ -136,7 +136,7 @@ export default function AiTutor({
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 max-h-[380px] overflow-y-auto px-1 space-y-3 mb-3 scrollbar-thin">
+      <div className="flex-1 min-h-[280px] max-h-[380px] lg:max-h-[calc(100vh-17rem)] overflow-y-auto px-1 space-y-3 mb-3 scrollbar-thin">
         {messages.length === 0 ? (
           <div className="py-8 text-center text-stone-500 space-y-2">
             <div className="text-3xl">👋</div>
