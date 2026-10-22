@@ -1,11 +1,11 @@
 # Netlify Configuration for Learn English Next.js 15 App
 [build]
   base = "web"
+  publish = ".next"
   command = "npm run build"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "22"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
