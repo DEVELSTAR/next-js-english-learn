@@ -267,7 +267,7 @@ export default function LessonSidebar({
             onClick={() => handleOpenTab("ai_tutor")}
             className={`relative w-10 h-10 rounded-xl transition flex items-center justify-center cursor-pointer group ${
               isOpen && activeTab === "ai_tutor"
-                ? "bg-stone-900 text-white"
+                ? "bg-emerald-800 text-white shadow-xs"
                 : "text-stone-600 hover:bg-stone-100 hover:text-emerald-700"
             }`}
             title="AI Tutor (Ask doubts in Hinglish)"
@@ -281,7 +281,7 @@ export default function LessonSidebar({
             onClick={() => handleOpenTab("chatroom")}
             className={`relative w-10 h-10 rounded-xl transition flex items-center justify-center cursor-pointer group ${
               isOpen && activeTab === "chatroom"
-                ? "bg-stone-900 text-white"
+                ? "bg-emerald-800 text-white shadow-xs"
                 : "text-stone-600 hover:bg-stone-100 hover:text-blue-700"
             }`}
             title="Classroom Chatroom"
@@ -298,7 +298,7 @@ export default function LessonSidebar({
             onClick={() => handleOpenTab("notes")}
             className={`relative w-10 h-10 rounded-xl transition flex items-center justify-center cursor-pointer group ${
               isOpen && activeTab === "notes"
-                ? "bg-stone-900 text-white"
+                ? "bg-emerald-800 text-white shadow-xs"
                 : "text-stone-600 hover:bg-stone-100 hover:text-amber-700"
             }`}
             title="Class & Topic Notes"
@@ -338,11 +338,11 @@ export default function LessonSidebar({
               onClick={() => handleTabChange("ai_tutor")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0 ${
                 activeTab === "ai_tutor"
-                  ? "bg-stone-900 text-white shadow-xs"
+                  ? "bg-emerald-800 text-white shadow-xs"
                   : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+              <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
               <span>AI Tutor</span>
             </button>
 
@@ -352,14 +352,14 @@ export default function LessonSidebar({
               onClick={() => handleTabChange("chatroom")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0 ${
                 activeTab === "chatroom"
-                  ? "bg-stone-900 text-white shadow-xs"
+                  ? "bg-emerald-800 text-white shadow-xs"
                   : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
               }`}
             >
-              <MessageCircle className="w-3.5 h-3.5 text-blue-500" />
+              <MessageCircle className="w-3.5 h-3.5 text-blue-300" />
               <span>Chatroom</span>
               {commentsCount > 0 && (
-                <span className="text-[10px] font-mono font-bold bg-stone-200 text-stone-800 px-1.5 py-0.2 rounded-full">
+                <span className="text-[10px] font-mono font-bold bg-white/20 text-white px-1.5 py-0.2 rounded-full">
                   {commentsCount}
                 </span>
               )}
@@ -371,14 +371,14 @@ export default function LessonSidebar({
               onClick={() => handleTabChange("notes")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0 ${
                 activeTab === "notes"
-                  ? "bg-stone-900 text-white shadow-xs"
+                  ? "bg-emerald-800 text-white shadow-xs"
                   : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
               }`}
             >
-              <FileText className="w-3.5 h-3.5 text-amber-500" />
+              <FileText className="w-3.5 h-3.5 text-amber-300" />
               <span>Notes</span>
               {notesCount > 0 && (
-                <span className="text-[10px] font-mono font-bold bg-stone-200 text-stone-800 px-1.5 py-0.2 rounded-full">
+                <span className="text-[10px] font-mono font-bold bg-white/20 text-white px-1.5 py-0.2 rounded-full">
                   {notesCount}
                 </span>
               )}

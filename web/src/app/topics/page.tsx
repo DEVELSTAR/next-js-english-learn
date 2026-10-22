@@ -73,7 +73,7 @@ export default async function TopicsPage({ searchParams }: TopicsPageProps) {
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-stone-800 transition cursor-pointer"
+          className="px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-semibold hover:bg-emerald-800 transition cursor-pointer shadow-xs"
         >
           Search
         </button>
@@ -86,7 +86,7 @@ export default async function TopicsPage({ searchParams }: TopicsPageProps) {
             <Link
               key={topic.id}
               href={`/topics/${topic.slug}`}
-              className="p-5 rounded-2xl border border-stone-200 bg-white hover:border-emerald-500 hover:shadow-xs transition group flex flex-col justify-between"
+              className="p-5 rounded-2xl border border-emerald-900/10 bg-white/90 backdrop-blur-xs hover:border-emerald-500 hover:shadow-xs transition group flex flex-col justify-between"
             >
               <div className="space-y-2">
                 <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full uppercase tracking-wider inline-block">

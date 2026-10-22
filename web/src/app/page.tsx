@@ -109,7 +109,7 @@ export default async function HomePage() {
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               {todayClass.title}
             </h2>
 
@@ -152,7 +152,7 @@ export default async function HomePage() {
                 <Link
                   key={c.id}
                   href={`/lessons/${c.slug}`}
-                  className="block p-4 rounded-xl border border-stone-200/90 bg-white hover:border-stone-400 hover:shadow-xs transition"
+                  className="block p-4 rounded-xl border border-emerald-900/10 bg-white/90 backdrop-blur-xs hover:border-emerald-600/40 hover:shadow-xs transition"
                 >
                   <div className="flex items-center justify-between text-xs text-stone-400 font-mono mb-1">
                     <span>{new Date(c.lesson_date).toLocaleDateString()}</span>
@@ -185,7 +185,7 @@ export default async function HomePage() {
                 <Link
                   key={t.id}
                   href={`/topics/${t.slug}`}
-                  className="block p-4 rounded-xl border border-stone-200/90 bg-white hover:border-stone-400 hover:shadow-xs transition"
+                  className="block p-4 rounded-xl border border-emerald-900/10 bg-white/90 backdrop-blur-xs hover:border-emerald-600/40 hover:shadow-xs transition"
                 >
                   <div className="flex items-center justify-between text-xs text-emerald-700 font-medium mb-1">
                     <span className="bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold">Topic</span>

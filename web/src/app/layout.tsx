@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="h-full bg-stone-50 text-stone-900 antialiased" suppressHydrationWarning>
-      <body className="min-h-full flex flex-col font-sans bg-stone-50 text-stone-900 selection:bg-stone-200" suppressHydrationWarning>
+    <html lang="en" className="h-full text-stone-900 antialiased" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans text-stone-900 selection:bg-emerald-200" suppressHydrationWarning>
         <SetupBanner />
         <Suspense fallback={<header className="h-16 bg-white/90 border-b border-stone-200" />}>
           <Navbar />

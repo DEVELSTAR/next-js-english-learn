@@ -119,7 +119,7 @@ export default function LessonNotes({
             <button
               type="submit"
               disabled={!content.trim() || isSubmitting}
-              className="px-3.5 py-1.5 bg-stone-900 hover:bg-stone-800 text-white rounded-lg text-xs font-semibold transition disabled:opacity-40 cursor-pointer"
+              className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition disabled:opacity-40 cursor-pointer shadow-xs"
             >
               Add Note
             </button>
@@ -130,7 +130,7 @@ export default function LessonNotes({
           <span>Sign in to write and share notes for this class.</span>
           <a
             href="/auth/sign-in"
-            className="px-3 py-1 bg-stone-900 text-white rounded-lg font-semibold hover:bg-stone-800 shrink-0"
+            className="px-3 py-1 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800 shrink-0 transition"
           >
             Sign In
           </a>

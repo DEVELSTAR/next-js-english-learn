@@ -209,7 +209,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       </div>
 
       {/* Article Content */}
-      <article className="bg-white border border-stone-200 rounded-xl p-6 sm:p-10 shadow-xs">
+      <article className="bg-white/95 backdrop-blur-xs border border-emerald-900/10 rounded-2xl p-6 sm:p-10 shadow-xs">
         {lesson.content ? (
           <div
             className="prose prose-stone max-w-none text-[1.05rem] leading-[1.8] text-[#292524]"

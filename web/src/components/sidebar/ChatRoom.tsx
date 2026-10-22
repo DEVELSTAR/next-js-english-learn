@@ -208,7 +208,7 @@ export default function ChatRoom({
             <button
               type="submit"
               disabled={!content.trim() || isSubmitting}
-              className="h-[42px] px-3.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl flex items-center justify-center transition disabled:opacity-40 cursor-pointer shrink-0"
+              className="h-[42px] px-3.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl flex items-center justify-center transition disabled:opacity-40 cursor-pointer shrink-0 shadow-xs"
             >
               <Send className="w-3.5 h-3.5" />
             </button>
@@ -218,7 +218,7 @@ export default function ChatRoom({
             <span>Sign in to participate in the classroom discussion.</span>
             <a
               href="/auth/sign-in"
-              className="px-3 py-1 bg-stone-900 text-white rounded-md font-semibold hover:bg-stone-800"
+              className="px-3 py-1 bg-emerald-700 text-white rounded-md font-semibold hover:bg-emerald-800 transition"
             >
               Sign In
             </a>

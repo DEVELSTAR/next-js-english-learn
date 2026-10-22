@@ -154,8 +154,8 @@ export default function AiTutor({
               <div
                 className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs leading-relaxed ${
                   m.role === "user"
-                    ? "bg-stone-900 text-white rounded-br-xs"
-                    : "bg-stone-100 text-stone-800 rounded-bl-xs border border-stone-200/60"
+                    ? "bg-emerald-700 text-white rounded-br-xs"
+                    : "bg-white text-stone-800 rounded-bl-xs border border-stone-200/90 shadow-2xs"
                 }`}
               >
                 {m.content}
@@ -204,7 +204,7 @@ export default function AiTutor({
             type="button"
             onClick={() => handleSend()}
             disabled={!input.trim() || isLoading}
-            className="h-[42px] px-3.5 bg-stone-900 text-white rounded-xl flex items-center justify-center hover:bg-stone-800 transition disabled:opacity-40 cursor-pointer shrink-0"
+            className="h-[42px] px-3.5 bg-emerald-700 text-white rounded-xl flex items-center justify-center hover:bg-emerald-800 transition disabled:opacity-40 cursor-pointer shrink-0 shadow-xs"
           >
             <Send className="w-3.5 h-3.5" />
           </button>
@@ -214,7 +214,7 @@ export default function AiTutor({
           <span>Sign in to chat with Akib Sir.</span>
           <a
             href="/auth/sign-in"
-            className="px-3 py-1 bg-stone-900 text-white rounded-lg font-semibold hover:bg-stone-800"
+            className="px-3 py-1 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800 transition"
           >
             Sign In
           </a>

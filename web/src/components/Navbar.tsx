@@ -26,13 +26,13 @@ export default async function Navbar() {
   const isAdmin = profile?.role === "admin" || profile?.role === "super_admin"
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200">
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-emerald-900/10 shadow-2xs">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2.5 text-stone-900 group">
-              <div className="w-8 h-8 rounded-lg bg-stone-900 flex items-center justify-center text-white font-semibold text-sm shadow-xs group-hover:bg-stone-800 transition">
+              <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white font-semibold text-sm shadow-xs group-hover:bg-emerald-700 transition">
                 LE
               </div>
               <div>
@@ -92,7 +92,7 @@ export default async function Navbar() {
                 </Link>
                 <Link
                   href="/auth/sign-up"
-                  className="text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-stone-900 text-white hover:bg-stone-800 transition"
+                  className="text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-emerald-700 text-white hover:bg-emerald-800 transition shadow-xs"
                 >
                   Register
                 </Link>

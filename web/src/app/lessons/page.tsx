@@ -80,7 +80,7 @@ export default async function LessonsPage({ searchParams }: LessonsPageProps) {
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-semibold hover:bg-stone-800 transition cursor-pointer"
+          className="px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-semibold hover:bg-emerald-800 transition cursor-pointer shadow-xs"
         >
           Search
         </button>
@@ -93,7 +93,7 @@ export default async function LessonsPage({ searchParams }: LessonsPageProps) {
             <Link
               key={lesson.id}
               href={`/lessons/${lesson.slug}`}
-              className="block p-4 sm:p-5 rounded-2xl border border-stone-200 bg-white hover:border-stone-400 hover:shadow-xs transition group"
+              className="block p-4 sm:p-5 rounded-2xl border border-emerald-900/10 bg-white/90 backdrop-blur-xs hover:border-emerald-600/40 hover:shadow-xs transition group"
             >
               <div className="flex items-center justify-between text-xs text-stone-400 font-mono mb-1.5">
                 <div className="flex items-center gap-1.5">
