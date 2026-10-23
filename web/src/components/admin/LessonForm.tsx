@@ -65,23 +65,25 @@ export default function LessonForm({
     }
 
     try {
-      if (isEditing && initialLesson.id) {
-        const { error: updateError } = await supabase
-          .from("lessons")
-          .update(payload)
-          .eq("id", initialLesson.id)
+      const res = await fetch(
+        isEditing && initialLesson.id
+          ? `/api/admin/lessons/${initialLesson.id}`
+          : `/api/admin/lessons`,
+        {
+          method: isEditing ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      )
 
-        if (updateError) throw updateError
-      } else {
-        const { error: insertError } = await supabase
-          .from("lessons")
-          .insert(payload)
-
-        if (insertError) throw insertError
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Failed to save lesson")
       }
 
-      router.push("/admin")
-      router.refresh()
+      window.location.href = "/admin"
     } catch (err: any) {
       setError(err?.message || "Failed to save lesson")
       setIsLoading(false)
@@ -106,8 +108,7 @@ export default function LessonForm({
         throw new Error(data.error || "Failed to delete lesson")
       }
 
-      router.push("/admin")
-      router.refresh()
+      window.location.href = "/admin"
     } catch (err: any) {
       setError(err?.message || "Failed to delete lesson")
       setIsLoading(false)

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, getAdminClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { MOCK_LESSONS } from "@/lib/mock-data"
 import LessonForm from "@/components/admin/LessonForm"
 
@@ -21,9 +21,30 @@ export default async function EditLessonPage({ params }: EditLessonPageProps) {
         .select("*")
         .eq("id", id)
         .single()
-      lesson = data
+
+      if (data) {
+        lesson = data
+      } else {
+        const adminClient = getAdminClient()
+        const { data: adminData } = await adminClient
+          .from("lessons")
+          .select("*")
+          .eq("id", id)
+          .single()
+        lesson = adminData
+      }
     } catch {
-      // Ignore
+      try {
+        const adminClient = getAdminClient()
+        const { data: adminData } = await adminClient
+          .from("lessons")
+          .select("*")
+          .eq("id", id)
+          .single()
+        lesson = adminData
+      } catch {
+        // Ignore
+      }
     }
   } else {
     lesson = MOCK_LESSONS.find((l) => String(l.id) === id) || null
@@ -35,4 +56,3 @@ export default async function EditLessonPage({ params }: EditLessonPageProps) {
 
   return <LessonForm initialLesson={lesson} isEditing={true} />
 }
-

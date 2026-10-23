@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, getAdminClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { MOCK_LESSONS } from "@/lib/mock-data"
 import { Plus, BookOpen, Sparkles, Users, FileText } from "lucide-react"
 import DeleteLessonButton from "@/components/admin/DeleteLessonButton"
@@ -15,15 +15,15 @@ export default async function AdminDashboardPage() {
 
   if (isSupabaseConfigured()) {
     try {
-      const supabase = await createClient()
+      const client = getAdminClient()
 
       // 1. Fetch counts
       const [{ count: lCount }, { count: tCount }, { count: sCount }, { count: nCount }] =
         await Promise.all([
-          supabase.from("lessons").select("*", { count: "exact", head: true }).eq("lesson_type", "daily_class"),
-          supabase.from("lessons").select("*", { count: "exact", head: true }).eq("lesson_type", "foundational_topic"),
-          supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "student"),
-          supabase.from("notes").select("*", { count: "exact", head: true }),
+          client.from("lessons").select("*", { count: "exact", head: true }).eq("lesson_type", "daily_class"),
+          client.from("lessons").select("*", { count: "exact", head: true }).eq("lesson_type", "foundational_topic"),
+          client.from("profiles").select("*", { count: "exact", head: true }).eq("role", "student"),
+          client.from("notes").select("*", { count: "exact", head: true }),
         ])
 
       lessonsCount = lCount || 0
@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
       notesCount = nCount || 0
 
       // 2. Fetch recent lessons
-      const { data } = await supabase
+      const { data } = await client
         .from("lessons")
         .select("*")
         .order("created_at", { ascending: false })

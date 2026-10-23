@@ -1,4 +1,4 @@
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, getAdminClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import StudentManager from "@/components/admin/StudentManager"
 import { Profile } from "@/types/database"
 
@@ -20,11 +20,12 @@ export default async function AdminStudentsPage() {
           .select("role")
           .eq("id", user.id)
           .single()
-        currentUserRole = profile?.role || "admin"
+        currentUserRole = profile?.role || user.user_metadata?.role || "admin"
       }
 
       // Fetch only students (admins are managed under /admin/admins)
-      const { data } = await supabase
+      const adminClient = getAdminClient()
+      const { data } = await adminClient
         .from("profiles")
         .select("*")
         .eq("role", "student")

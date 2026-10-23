@@ -41,22 +41,49 @@ export async function updateSession(request: NextRequest) {
   })
 
   // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could compromise your auth flow.
+  // supabase.auth.getUser().
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
 
+  // Helper to create redirect response while preserving all Supabase session cookies
+  function createRedirect(destination: string | URL) {
+    const targetUrl = typeof destination === "string" ? new URL(destination, request.url) : destination
+    const redirectResponse = NextResponse.redirect(targetUrl)
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
+  }
+
   // Fetch role if user is authenticated
   let userRole: string | null = null
   if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single()
-    userRole = profile?.role || "student"
+    // 1. Check user_metadata first as fast & infallible cache
+    const metaRole = user.user_metadata?.role
+    if (metaRole === "admin" || metaRole === "super_admin") {
+      userRole = metaRole
+    }
+
+    // 2. Query profiles table
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single()
+      if (profile?.role) {
+        userRole = profile.role
+      }
+    } catch {
+      // Keep metaRole if profile query fails or times out
+    }
+
+    if (!userRole) {
+      userRole = "student"
+    }
   }
 
   const isAdmin = userRole === "admin" || userRole === "super_admin"
@@ -65,7 +92,7 @@ export async function updateSession(request: NextRequest) {
   if (pathname === "/admin/login") {
     if (user && isAdmin) {
       // Already logged in as admin, go straight to dashboard
-      return NextResponse.redirect(new URL("/admin", request.url))
+      return createRedirect("/admin")
     }
     return supabaseResponse
   }
@@ -76,31 +103,37 @@ export async function updateSession(request: NextRequest) {
       // Unauthenticated users trying to access admin panel go to /admin/login
       const url = new URL("/admin/login", request.url)
       url.searchParams.set("redirectTo", pathname)
-      return NextResponse.redirect(url)
+      return createRedirect(url)
     }
 
     if (!isAdmin) {
       // Students or non-admins are denied access
-      return NextResponse.redirect(new URL("/", request.url))
+      return createRedirect("/")
     }
 
     // Only super_admin can access /admin/admins
     if (pathname.startsWith("/admin/admins") && userRole !== "super_admin") {
-      return NextResponse.redirect(new URL("/admin", request.url))
+      return createRedirect("/admin")
     }
 
     return supabaseResponse
   }
 
-  // 3. Admin boundary: Admins only have access to the admin panel
-  // If an admin visits public student pages, redirect them to /admin
+  // 3. Admin boundary: Admins only access admin portal & lesson preview pages
+  // If an admin visits public student pages (student sign-in, sign-up, student dashboard),
+  // redirect them to /admin so they stay within their control panel.
   if (user && isAdmin) {
-    // Allow sign-out and API routes
-    if (!pathname.startsWith("/api") && pathname !== "/auth/sign-out") {
-      return NextResponse.redirect(new URL("/admin", request.url))
+    const isAllowedForAdmin =
+      pathname.startsWith("/admin") ||
+      pathname.startsWith("/lessons") ||
+      pathname.startsWith("/topics") ||
+      pathname.startsWith("/api") ||
+      pathname === "/auth/sign-out"
+
+    if (!isAllowedForAdmin) {
+      return createRedirect("/admin")
     }
   }
 
   return supabaseResponse
 }
-

@@ -23,12 +23,15 @@ export default async function AdminLayout({
     .eq("id", user.id)
     .single()
 
+  const userRole = profile?.role || user.user_metadata?.role
+  const userName = profile?.name || user.user_metadata?.name || user.email?.split("@")[0] || "Admin"
+
   // If not admin, let page/middleware handle redirect
-  if (!profile || !["admin", "super_admin"].includes(profile.role)) {
+  if (!userRole || !["admin", "super_admin"].includes(userRole)) {
     return <>{children}</>
   }
 
-  const isSuperAdmin = profile.role === "super_admin"
+  const isSuperAdmin = userRole === "super_admin"
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -79,7 +82,7 @@ export default async function AdminLayout({
         {/* Right: Profile Info & Sign Out */}
         <div className="flex items-center gap-3 text-xs">
           <div className="flex items-center gap-2">
-            <span className="text-stone-300 font-medium">{profile.name}</span>
+            <span className="text-stone-300 font-medium">{userName}</span>
             <span
               className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                 isSuperAdmin

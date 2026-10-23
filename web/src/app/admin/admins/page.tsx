@@ -1,4 +1,4 @@
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, getAdminClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import AdminManager from "@/components/admin/AdminManager"
 import { Profile } from "@/types/database"
@@ -25,13 +25,16 @@ export default async function AdminAdminsPage() {
     .eq("id", user.id)
     .single()
 
+  const userRole = profile?.role || user.user_metadata?.role
+
   // STRICT GUARD: Only Super Admin can access Admin Management
-  if (!profile || profile.role !== "super_admin") {
+  if (userRole !== "super_admin") {
     redirect("/admin")
   }
 
-  // Fetch all admins & super_admin
-  const { data } = await supabase
+  // Fetch all admins & super_admin using service client for guaranteed reliability
+  const adminClient = getAdminClient()
+  const { data } = await adminClient
     .from("profiles")
     .select("*")
     .in("role", ["admin", "super_admin"])
@@ -42,4 +45,3 @@ export default async function AdminAdminsPage() {
 
   return <AdminManager initialAdmins={admins} currentUserId={user.id} />
 }
-

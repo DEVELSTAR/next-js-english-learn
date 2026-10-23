@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, getAdminClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { MOCK_LESSONS } from "@/lib/mock-data"
 import { Lesson, LessonCompletion } from "@/types/database"
 import LessonSidebar from "@/components/sidebar/LessonSidebar"
@@ -34,10 +34,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
         const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single()
         profile = data
       }
-      isAdmin = profile?.role === "admin" || profile?.role === "super_admin"
+      isAdmin =
+        profile?.role === "admin" ||
+        profile?.role === "super_admin" ||
+        user?.user_metadata?.role === "admin" ||
+        user?.user_metadata?.role === "super_admin"
 
-      // 2. Fetch the lesson
-      const { data: lessonData } = await supabase
+      // 2. Fetch the lesson (use getAdminClient if admin to allow previewing drafts)
+      const { data: lessonData } = await (isAdmin ? getAdminClient() : supabase)
         .from("lessons")
         .select("*")
         .eq("slug", slug)

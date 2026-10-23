@@ -34,14 +34,16 @@ export default function AdminLoginPage() {
         throw new Error("Unable to authenticate admin credentials.")
       }
 
-      // Check role in profiles
-      const { data: profile, error: profileErr } = await supabase
+      // Check role in profiles or user_metadata
+      const { data: profile } = await supabase
         .from("profiles")
         .select("role, name")
         .eq("id", data.user.id)
         .single()
 
-      if (profileErr || !profile || !["admin", "super_admin"].includes(profile.role)) {
+      const userRole = profile?.role || data.user.user_metadata?.role
+
+      if (!userRole || !["admin", "super_admin"].includes(userRole)) {
         // Not an admin: sign out immediately!
         await supabase.auth.signOut()
         throw new Error(
@@ -49,9 +51,12 @@ export default function AdminLoginPage() {
         )
       }
 
-      // Admin verified -> Redirect to /admin
-      router.push("/admin")
-      router.refresh()
+      // Check if there was a redirectTo query param
+      const params = new URLSearchParams(window.location.search)
+      const target = params.get("redirectTo") || "/admin"
+
+      // Admin verified -> Hard navigation guarantees all session cookies are passed
+      window.location.href = target
     } catch (err: any) {
       setErrorMessage(err?.message || "Invalid administrative credentials.")
       setIsLoading(false)
