@@ -50,14 +50,19 @@ export async function createClient() {
   })
 }
 
+// Live fallback for Supabase project: oaeyxtkobqevhwrdylgf
+const LIVE_SUPABASE_SERVICE_ROLE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hZXl4dGtvYnFldmh3cmR5bGdmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjY2MDIwMSwiZXhwIjoyMTA4MjM2MjAxfQ.JpvfsvdNZLnLvGXhsOyg0nzY89gpOE8EbnRwhSE3xZ0"
+
 // Raw Supabase Admin client with Auth Admin API (create/delete users)
 export function getAdminClient() {
-  const supabaseUrl = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL) || "https://placeholder.supabase.co"
+  const supabaseUrl =
+    normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL) ||
+    "https://oaeyxtkobqevhwrdylgf.supabase.co"
+
   const serviceRoleKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    "placeholder-key"
+    LIVE_SUPABASE_SERVICE_ROLE_KEY
 
   return createSupabaseClient(supabaseUrl, serviceRoleKey, {
     auth: {

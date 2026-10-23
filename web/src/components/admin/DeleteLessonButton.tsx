@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Trash2 } from "lucide-react"
+import { Trash2, Loader2 } from "lucide-react"
 
 interface DeleteLessonButtonProps {
   lessonId: number
@@ -10,7 +9,6 @@ interface DeleteLessonButtonProps {
 }
 
 export default function DeleteLessonButton({ lessonId, lessonTitle }: DeleteLessonButtonProps) {
-  const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
@@ -29,10 +27,10 @@ export default function DeleteLessonButton({ lessonId, lessonTitle }: DeleteLess
         throw new Error(data.error || "Failed to delete lesson")
       }
 
-      router.refresh()
+      // Hard reload page to reflect deletion immediately in table
+      window.location.reload()
     } catch (err: any) {
       alert(err.message || "Failed to delete lesson")
-    } finally {
       setIsDeleting(false)
     }
   }
@@ -42,12 +40,15 @@ export default function DeleteLessonButton({ lessonId, lessonTitle }: DeleteLess
       type="button"
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-stone-400 hover:text-red-600 transition p-1 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-40"
+      className="text-stone-400 hover:text-red-600 transition p-1.5 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-40"
       title={`Delete ${lessonTitle}`}
       aria-label={`Delete ${lessonTitle}`}
     >
-      <Trash2 className="w-4 h-4" />
+      {isDeleting ? (
+        <Loader2 className="w-4 h-4 animate-spin text-red-500" />
+      ) : (
+        <Trash2 className="w-4 h-4" />
+      )}
     </button>
   )
 }
-

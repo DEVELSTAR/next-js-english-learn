@@ -24,7 +24,7 @@ async function authenticateAdmin() {
     return { error: "Forbidden: Admin credentials required.", status: 403 }
   }
 
-  return { caller: user }
+  return { caller: user, supabase }
 }
 
 // PUT: Update an existing lesson
@@ -103,11 +103,36 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid lesson ID" }, { status: 400 })
     }
 
+    // 1. Try with service role client first (bypasses RLS)
     const adminClient = getAdminClient()
-    const { error } = await adminClient.from("lessons").delete().eq("id", lessonId)
+    const { data: deleted, error: adminError } = await adminClient
+      .from("lessons")
+      .delete()
+      .eq("id", lessonId)
+      .select()
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (adminError) {
+      return NextResponse.json({ error: adminError.message }, { status: 500 })
+    }
+
+    // 2. If 0 rows affected with admin client, fall back to authenticated client
+    if (!deleted || deleted.length === 0) {
+      const { data: userDeleted, error: userError } = await auth.supabase!
+        .from("lessons")
+        .delete()
+        .eq("id", lessonId)
+        .select()
+
+      if (userError) {
+        return NextResponse.json({ error: userError.message }, { status: 500 })
+      }
+
+      if (!userDeleted || userDeleted.length === 0) {
+        return NextResponse.json(
+          { error: "Lesson not found or already deleted." },
+          { status: 404 }
+        )
+      }
     }
 
     return NextResponse.json({ success: true })
